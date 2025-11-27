@@ -114,14 +114,21 @@ Project Structure
 ----------------------------------------
 
 SmsBot-Notion/ 
+
 │ 
+
 ├── api/ 
+
 │   └── add-transaction.js 
 
 ├── README.md 
+
 ├── package.json 
+
 ├── vercel.json 
+
 └── .env.example 
+
 
 
 ----------------------------------------
