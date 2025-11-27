@@ -52,20 +52,20 @@ How It Works
 Installation & Setup
 ----------------------------------------
 
-1) Clone
+**1) Clone**
 ----------------------------------------
 git clone https://github.com/Taha-Zaki/SmsBot-Notion
 cd SmsBot-Notion
 
-2) Create Notion Integration
+**2) Create Notion Integration**
 ----------------------------------------
 - وارد https://www.notion.so/my-integrations شوید
 - New Integration
 - Permissions: Read + Insert + Update
 - Token را کپی کنید
 - دیتابیس را باز کنید → Share → Add Connection → Integration را اضافه کنید
-
-3) Notion Database Requirements
+**
+3) Notion Database Requirements**
 ----------------------------------------
 دیتابیس باید Propertyهای زیر را داشته باشد:
 
@@ -78,20 +78,21 @@ Account (Rich Text)
 
 DATABASE_ID را از URL دیتابیس بردارید.
 
-4) Environment Variables (Vercel)
+**4) Environment Variables (Vercel)**
 ----------------------------------------
 به Settings پروژه در Vercel بروید:
 
 NOTION_TOKEN = Notion Integration Token
 NOTION_DATABASE_ID = Database ID
 
-5) Deploy on Vercel
+**5) Deploy on Vercel**
 ----------------------------------------
 از داشبورد: Import from GitHub
 یا:
 vercel
 
-6) Android SMS Forwarder Setup
+**6) Android SMS Forwarder Setup
+**
 ----------------------------------------
 در Google Play نصب کنید:
 SMS Forwarder – Auto Forward SMS to URL
@@ -151,4 +152,4 @@ Support
 - ریپو را Star کنید
 - Fork کنید
 
-Made by Taha Zaki ❤️
+Taha Zaki
