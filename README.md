@@ -1,59 +1,34 @@
-# SmsBot-Notion
-🚀 SmsBot-Notion
+<h1 align="center">📱 SmsBot-Notion</h1>
+<p align="center">Sync Iranian Bank Mellat SMS → Notion Database (with USD conversion)<br>Powered by Vercel Serverless + Notion API</p>
 
-Automatically sync Iranian bank SMS (Mellat Bank) to Notion database — with USD conversion.
-Simple, free, and powered by Vercel Serverless Functions + Notion API.
+---
 
-📌 Overview
+## 🚀 Overview
 
-این پروژه پیامک‌های بانک ملت را دریافت می‌کند (از طریق اپ SMS Forwarder روی گوشی)
-و آن‌ها را تبدیل می‌کند به یک رکورد کامل در Notion Database:
+این پروژه پیامک‌های **بانک ملت** را می‌گیرد و به‌صورت خودکار یک رکورد جدید داخل دیتابیس Notion شما ثبت می‌کند.
 
-🔹 پشتیبانی از:
+### ویژگی‌ها:
+- تشخیص **برداشت** (Expense) و **واریز** (Income)
+- استخراج مبلغ از پیامک بانک ملت
+- تبدیل مبلغ تومان → دلار  
+  از طریق API:
 
-برداشت (Expense)
-
-واریز (Income)
-
-🔹 امکانات:
-
-استخراج خودکار مبلغ از SMS
-
-تشخیص نوع تراکنش (برداشت/واریز)
-
-تبدیل مبلغ تومان → دلار
-با استفاده از API:
 
 https://taha-zaki.github.io/usd-to-toman/data.json
 
+- ساخت رکورد کامل در Notion شامل:
+- Name  
+- Type  
+- Label  
+- Amount (USD)  
+- Date  
+- Account (ثابت: Mellat Card)
 
-ثبت تراکنش در Notion با فیلدهای کامل:
+---
 
-Name
+## 📱 Example SMS Format (Bank Mellat)
 
-Type (Income / Expense)
 
-Label
-
-Amount (USD)
-
-Date (مثل Nov 25, 2025)
-
-Account (ثابت: "Mellat Card")
-
-🔹 100% Free Stack:
-
-Vercel Hobby (Serverless) – رایگان
-
-Notion – رایگان
-
-GitHub – برای سورس
-
-اپ SMS Forwarder – رایگان در Google Play
-
-📱 Example SMS
-
-نمونه پیام بانک ملت که این بات پشتیبانی می‌کند:
 
 حساب7480373047
 برداشت300,000
@@ -63,161 +38,155 @@ GitHub – برای سورس
 
 یا:
 
+
+
 حساب7480373047
-واریز300,000 
+واریز300,000
 مانده19,061,382
 04/09/05-17:17
 
-🧠 How It Works
 
-پیامک جدید روی گوشی دریافت می‌شود
+---
 
-اپ SMS Forwarder آن را POST می‌کند →
-https://your-vercel-domain.com/api/add-transaction
+## 🧠 How It Works
 
-تابع سروِرلس:
+1. پیامک جدید روی گوشی دریافت می‌شود  
+2. اپ SMS Forwarder آن را به آدرس Vercel POST می‌کند  
+3. تابع Vercel:
+   - متن پیام را پارس می‌کند  
+   - مبلغ را استخراج می‌کند  
+   - نرخ دلار را از API می‌گیرد  
+   - مبلغ نهایی دلاری را حساب می‌کند  
+   - تراکنش را داخل Notion می‌سازد
 
-متن پیامک را پارس می‌کند
+---
 
-نوع تراکنش را تشخیص می‌دهد
+## 🛠️ Installation & Setup
 
-مبلغ را استخراج می‌کند
+### 1️⃣ Clone the Repo
 
-نرخ روز دلار را از API می‌گیرد
-
-مبلغ را به USD تبدیل می‌کند
-
-رکورد را داخل Notion می‌سازد
-
-🛠️ Setup Guide
-1️⃣ Clone the repository
+```bash
 git clone https://github.com/Taha-Zaki/SmsBot-Notion
 cd SmsBot-Notion
 
 2️⃣ Create Notion Integration
 
-برو به:
+برو به
 https://www.notion.so/my-integrations
 
-"Create New Integration"
+New Integration
 
-Permission = Read + Write
+Permission: Read + Write
 
 Token را کپی کن
 
-دیتابیس موردنظرت را با Integration Share کن
+دیتابیس Notion را باز کن → Share → Add Connection → Integration را اضافه کن
 
-3️⃣ Prepare Notion Database
+3️⃣ Notion Database Requirements
 
-دیتابیس باید شامل این Propertyها باشد:
+دیتابیس باید شامل Propertyهای زیر باشد:
 
 Property	Type
 Name	Title
-Type	Select (Income, Expense)
+Type	Select (Income / Expense)
 Label	Rich Text
 Amount	Number
 Date	Date
 Account	Rich Text
+4️⃣ Environment Variables (Vercel)
 
-DATABASE_ID را از URL صفحه Notion کپی کنید.
+به مسیر زیر برو:
+Project → Settings → Environment Variables
 
-4️⃣ Deploy to Vercel
+این‌ها را اضافه کن:
 
-اگر Vercel CLI داری:
+KEY	VALUE
+NOTION_TOKEN	Integration Token
+NOTION_DATABASE_ID	Database ID
+5️⃣ Deploy to Vercel
+
+اگر CLI داری:
 
 vercel
 
 
-یا از داشبورد:
+یا از داشبورد Vercel → Import Project from GitHub
 
-New Project → Import from GitHub
-
-Repo: SmsBot-Notion
-
-5️⃣ Add Environment Variables in Vercel
-
-به مسیر:
-Project → Settings → Environment Variables
-
-این‌ها را اضافه کنید:
-
-KEY	VALUE
-NOTION_TOKEN	توکن Integration
-NOTION_DATABASE_ID	دیتابیس ID
-
-بعد:
-
-Redeploy یا Deploy جدید
-
-6️⃣ Configure SMS Forwarding (Android)
+6️⃣ Android SMS Forwarder Setup
 
 در Google Play نصب کن:
 
 SMS Forwarder – Auto Forward SMS to URL
-(تست‌شده، رایگان)
 
 تنظیمات:
 
-Add Rule
+Trigger → SMS Received
 
-Text Filter:
+Filter → شامل "برداشت" یا "واریز"
 
-برداشت
-वاریز
-Mellat
+Action → HTTP Request
 
-
-Forward To → HTTP URL
-
-Method = POST
+Method → POST
 
 URL:
 
-https://your-vercel-domain.com/api/add-transaction
+https://your-vercel-domain.vercel.app/api/add-transaction
 
 
-Body Type = JSON
-
-Body:
+Body (JSON):
 
 {
   "text": "$message"
 }
 
-🧩 API Response Example
-
-موفق:
-
-{
-  "ok": true,
-  "output": {
-    "id": "some-notion-page-id"
-  }
-}
-
-
-خطا:
-
-{
-  "ok": false,
-  "error": "Something went wrong..."
-}
-
-📂 File Structure
+📂 Project Structure
 SmsBot-Notion/
 │
 ├── api/
-│   └── add-transaction.js   # Main Vercel serverless function
+│   └── add-transaction.js
 │
 ├── README.md
-└── package.json
+├── package.json
+├── vercel.json
+└── .env.example
 
-⭐ Support
+🧾 Example API Success Response
+{
+  "ok": true,
+  "output": {
+    "id": "xxxxxxxxxxxx"
+  }
+}
 
-اگر این پروژه به دردتان خورد:
+📌 Features to Add (PR Welcome)
 
-⭐ بدهید
+پشتیبانی از بانک‌های دیگر
 
-Fork کنید
+ذخیره تاریخ شمسی
 
-Share کنید
+تبدیل تاریخ جلالی → میلادی
+
+ساخت نمودار هزینه ماهانه در Notion
+
+ساخت نسخه iOS (Notifications Listener)
+
+🤝 Contributing
+
+PR و Issue آزاد است.
+اگر خواستید، پروژه را Fork کنید.
+
+📜 License
+
+MIT License — Feel free to use.
+
+⭐ Support the Project
+
+اگر پروژه به‌دردتان خورد:
+
+⭐ این ریپو را Star کنید
+
+Link را منتشر کنید
+
+مشارکت کنید
+
+<h3 align="center">Made with ❤️ by Taha</h3> ```
