@@ -91,8 +91,7 @@ NOTION_DATABASE_ID = Database ID
 یا:
 vercel
 
-**6) Android SMS Forwarder Setup
-**
+**6) Android SMS Forwarder Setup**
 ----------------------------------------
 در Google Play نصب کنید:
 SMS Forwarder – Auto Forward SMS to URL
