@@ -1,192 +1,154 @@
-<h1 align="center">📱 SmsBot-Notion</h1>
-<p align="center">Sync Iranian Bank Mellat SMS → Notion Database (with USD conversion)<br>Powered by Vercel Serverless + Notion API</p>
+SmsBot-Notion
+==============================
 
----
+Sync Iranian Bank Mellat SMS → Notion Database (with USD conversion)
+Powered by Vercel Serverless Functions + Notion API
 
-## 🚀 Overview
+----------------------------------------
+Overview
+----------------------------------------
 
-این پروژه پیامک‌های **بانک ملت** را می‌گیرد و به‌صورت خودکار یک رکورد جدید داخل دیتابیس Notion شما ثبت می‌کند.
+این پروژه پیامک‌های بانک ملت را دریافت می‌کند و به‌صورت خودکار یک رکورد جدید داخل دیتابیس Notion شما اضافه می‌کند.
 
-### ویژگی‌ها:
-- تشخیص **برداشت** (Expense) و **واریز** (Income)
-- استخراج مبلغ از پیامک بانک ملت
-- تبدیل مبلغ تومان → دلار  
-  از طریق API:
+ویژگی‌ها:
+- تشخیص خودکار برداشت / واریز
+- تبدیل تومان → دلار (USD)
+- پر کردن اتوماتیک Propertyهای دیتابیس
+- بدون نیاز به Zapier / IFTTT / n8n
+- 100٪ رایگان (Vercel + Notion + Android SMS Forwarder)
 
+----------------------------------------
+Example SMS (Bank Mellat)
+----------------------------------------
 
-https://taha-zaki.github.io/usd-to-toman/data.json
-
-- ساخت رکورد کامل در Notion شامل:
-- Name  
-- Type  
-- Label  
-- Amount (USD)  
-- Date  
-- Account (ثابت: Mellat Card)
-
----
-
-## 📱 Example SMS Format (Bank Mellat)
-
-
-
-حساب748025373047
+Withdraw:
+حساب7480373047
 برداشت300,000
 مانده19,061,382
 04/09/05-17:17
 
-
-یا:
-
-
-
-حساب748035273047
+Deposit:
+حساب7480373047
 واریز300,000
 مانده19,061,382
 04/09/05-17:17
 
+----------------------------------------
+How It Works
+----------------------------------------
 
----
-
-## 🧠 How It Works
-
-1. پیامک جدید روی گوشی دریافت می‌شود  
-2. اپ SMS Forwarder آن را به آدرس Vercel POST می‌کند  
+1. پیامک جدید روی گوشی دریافت می‌شود
+2. اپ SMS Forwarder پیام را POST می‌کند:
+   https://your-vercel-domain.vercel.app/api/add-transaction
 3. تابع Vercel:
-   - متن پیام را پارس می‌کند  
-   - مبلغ را استخراج می‌کند  
-   - نرخ دلار را از API می‌گیرد  
-   - مبلغ نهایی دلاری را حساب می‌کند  
-   - تراکنش را داخل Notion می‌سازد
+   - مبلغ را استخراج می‌کند
+   - برداشت یا واریز را تشخیص می‌دهد
+   - نرخ دلار را از API می‌گیرد
+   - مبلغ دلاری را حساب می‌کند
+   - Type (Income/Expense) را تعیین می‌کند
+   - رکورد را داخل Notion می‌سازد
 
----
+----------------------------------------
+Installation & Setup
+----------------------------------------
 
-## 🛠️ Installation & Setup
-
-### 1️⃣ Clone the Repo
-
-```bash
+1) Clone
+----------------------------------------
 git clone https://github.com/Taha-Zaki/SmsBot-Notion
 cd SmsBot-Notion
 
-2️⃣ Create Notion Integration
+2) Create Notion Integration
+----------------------------------------
+- وارد https://www.notion.so/my-integrations شوید
+- New Integration
+- Permissions: Read + Insert + Update
+- Token را کپی کنید
+- دیتابیس را باز کنید → Share → Add Connection → Integration را اضافه کنید
 
-برو به
-https://www.notion.so/my-integrations
+3) Notion Database Requirements
+----------------------------------------
+دیتابیس باید Propertyهای زیر را داشته باشد:
 
-New Integration
+Name (Title)
+Type (Select: Income, Expense)
+Label (Rich Text)
+Amount (Number)
+Date (Date)
+Account (Rich Text)
 
-Permission: Read + Write
+DATABASE_ID را از URL دیتابیس بردارید.
 
-Token را کپی کن
+4) Environment Variables (Vercel)
+----------------------------------------
+به Settings پروژه در Vercel بروید:
 
-دیتابیس Notion را باز کن → Share → Add Connection → Integration را اضافه کن
+NOTION_TOKEN = Notion Integration Token
+NOTION_DATABASE_ID = Database ID
 
-3️⃣ Notion Database Requirements
-
-دیتابیس باید شامل Propertyهای زیر باشد:
-
-Property	Type
-Name	Title
-Type	Select (Income / Expense)
-Label	Rich Text
-Amount	Number
-Date	Date
-Account	Rich Text
-4️⃣ Environment Variables (Vercel)
-
-به مسیر زیر برو:
-Project → Settings → Environment Variables
-
-این‌ها را اضافه کن:
-
-KEY	VALUE
-NOTION_TOKEN	Integration Token
-NOTION_DATABASE_ID	Database ID
-5️⃣ Deploy to Vercel
-
-اگر CLI داری:
-
+5) Deploy on Vercel
+----------------------------------------
+از داشبورد: Import from GitHub
+یا:
 vercel
 
-
-یا از داشبورد Vercel → Import Project from GitHub
-
-6️⃣ Android SMS Forwarder Setup
-
-در Google Play نصب کن:
-
+6) Android SMS Forwarder Setup
+----------------------------------------
+در Google Play نصب کنید:
 SMS Forwarder – Auto Forward SMS to URL
 
-تنظیمات:
-
+Rule:
 Trigger → SMS Received
-
 Filter → شامل "برداشت" یا "واریز"
-
-Action → HTTP Request
-
-Method → POST
+Action → POST HTTP
 
 URL:
-
 https://your-vercel-domain.vercel.app/api/add-transaction
 
-
 Body (JSON):
-
 {
   "text": "$message"
 }
 
-📂 Project Structure
-SmsBot-Notion/
-│
-├── api/
-│   └── add-transaction.js
-│
-├── README.md
-├── package.json
-├── vercel.json
-└── .env.example
+----------------------------------------
+Project Structure
+----------------------------------------
 
-🧾 Example API Success Response
+SmsBot-Notion/
+ ├── api/
+ │    └── add-transaction.js
+ ├── README.md
+ ├── package.json
+ ├── vercel.json
+ └── .env.example
+
+----------------------------------------
+API Response Example
+----------------------------------------
+
+موفق:
 {
   "ok": true,
   "output": {
-    "id": "xxxxxxxxxxxx"
+    "id": "notion-page-id"
   }
 }
 
-📌 Features to Add (PR Welcome)
+خطا:
+{
+  "ok": false,
+  "error": "Something went wrong"
+}
 
-پشتیبانی از بانک‌های دیگر
+----------------------------------------
+License
+----------------------------------------
+MIT License
 
-ذخیره تاریخ شمسی
+----------------------------------------
+Support
+----------------------------------------
+اگر پروژه مفید بود:
+- ریپو را Star کنید
+- Fork کنید
 
-تبدیل تاریخ جلالی → میلادی
-
-ساخت نمودار هزینه ماهانه در Notion
-
-ساخت نسخه iOS (Notifications Listener)
-
-🤝 Contributing
-
-PR و Issue آزاد است.
-اگر خواستید، پروژه را Fork کنید.
-
-📜 License
-
-MIT License — Feel free to use.
-
-⭐ Support the Project
-
-اگر پروژه به‌دردتان خورد:
-
-⭐ این ریپو را Star کنید
-
-Link را منتشر کنید
-
-مشارکت کنید
-
-<h3 align="center">Made with ❤️ by Taha</h3> ```
+Made by Taha Zaki ❤️
