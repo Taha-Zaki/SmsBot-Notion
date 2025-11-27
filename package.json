@@ -1,7 +1,6 @@
 {
   "name": "smsbot-notion",
   "version": "1.0.0",
-  "type": "module",
-  "dependencies": {}
+  "type": "module"
 }
 
